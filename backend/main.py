@@ -149,6 +149,8 @@ def norm_phone(p):
 
 def norm_status(x):
     x = str(x or "").upper()
+    if "." in x:  # PalPluss event_type style, e.g. "transaction.success"
+        x = x.rsplit(".", 1)[-1]
     if x in {"SUCCESS", "SUCCESSFUL", "COMPLETED", "PAID"}:
         return "SUCCESS"
     if x in {"FAILED", "CANCELLED", "CANCELED", "TIMEOUT", "EXPIRED", "REJECTED"}:
@@ -197,16 +199,31 @@ def send_stk(b: Stk, u: User = Depends(current_user), s: Session = Depends(db)):
 async def callback(request: Request, token: str = "", s: Session = Depends(db)):
     if CALLBACK_TOKEN and not hmac.compare_digest(token, CALLBACK_TOKEN):
         raise HTTPException(403, "Bad token")
+    
     body = await request.json()
-    d = body.get("data") if isinstance(body.get("data"), dict) else body
-    tid, cid = d.get("transactionId"), d.get("providerCheckoutId")
+    
+    # PalPluss wraps transaction details in a "transaction" object, but support "data" or root level as fallbacks
+    t_obj = body.get("transaction") or body.get("data") or body
+    
+    tid = t_obj.get("id") or t_obj.get("transactionId")
+    cid = t_obj.get("provider_checkout_id") or t_obj.get("providerCheckoutId")
+    ref = t_obj.get("external_reference") or t_obj.get("accountReference")
+    
     q = s.query(Tx)
-    tx = (q.filter(Tx.tx_id == tid).first() if tid else None) or (q.filter(Tx.checkout_id == cid).first() if cid else None)
+    tx = (
+        (q.filter(Tx.tx_id == tid).first() if tid else None) or 
+        (q.filter(Tx.checkout_id == cid).first() if cid else None) or
+        (q.filter(Tx.reference == ref).first() if ref else None)
+    )
+    
     if tx:
-        tx.status = norm_status(d.get("status"))
-        tx.result = d.get("resultDescription") or d.get("message") or tx.result
+        # PalPluss uses event_type like "transaction.success", "transaction.failed", etc.
+        raw_status = t_obj.get("status") or body.get("event_type")
+        tx.status = norm_status(raw_status)
+        tx.result = t_obj.get("result_desc") or t_obj.get("resultDescription") or t_obj.get("message") or tx.result
         tx.updated_at = now()
         s.commit()
+        
     return {"received": True}
 
 
