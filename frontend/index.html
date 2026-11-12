@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PalPluss Collect</title>
+<meta name="theme-color" content="#059669">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='26' fill='%23059669'/><path d='M30 70V30h22a13 13 0 0 1 0 26H42' stroke='white' stroke-width='9' fill='none' stroke-linecap='round'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="config.js"></script>
+<script>document.documentElement.dataset.theme=localStorage.getItem("pc_theme")||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")</script>
+<style>
+:root{--bg:#f6f7f9;--sf:#fff;--sf2:#f1f3f6;--ink:#0f172a;--mute:#64748b;--line:#e5e8ee;--ac:#059669;--ac2:#047857;--acs:#d1fae5;--ok:#047857;--okb:#d1fae5;--bad:#b91c1c;--badb:#fee2e2;--wait:#a16207;--waitb:#fef3c7;--sh:0 1px 2px rgba(15,23,42,.05),0 8px 24px -12px rgba(15,23,42,.12);--f:"Plus Jakarta Sans",system-ui,sans-serif}
+[data-theme=dark]{--bg:#0a0e14;--sf:#111821;--sf2:#18212c;--ink:#e6edf3;--mute:#8b9bab;--line:#1f2a37;--ac:#34d399;--ac2:#6ee7b7;--acs:#10372b;--ok:#6ee7b7;--okb:#10372b;--bad:#fca5a5;--badb:#3b1414;--wait:#fcd34d;--waitb:#3a2c0a;--sh:none}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{font:14px/1.5 var(--f);background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;background:var(--ac);color:#fff;border:0;border-radius:10px;padding:.6rem 1rem;font-weight:600;cursor:pointer;transition:filter .15s}
+[data-theme=dark] .btn{color:#042f23}.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.6;cursor:wait}
+.btn.sec{background:var(--sf);color:var(--ink);border:1px solid var(--line)}.btn.sec:hover{background:var(--sf2);filter:none}.btn.sm{padding:.35rem .7rem;font-size:13px}
+label{display:block;font-weight:600;font-size:13px;margin-bottom:.35rem}
+input,select{width:100%;padding:.6rem .8rem;border:1px solid var(--line);border-radius:10px;background:var(--sf)}
+input:focus,select:focus{border-color:var(--ac);outline:3px solid var(--acs)}
+.field{margin-bottom:1rem}.err{color:var(--bad);font-size:13px;min-height:1.3em;margin-top:.6rem}
+.card{background:var(--sf);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh)}.pad{padding:1.2rem}
+h2{font-size:1.5rem;letter-spacing:-.02em;font-weight:800}h3{font-size:15px;font-weight:700}
+.sub{color:var(--mute)}.mono{font-feature-settings:"zero"}
+
+#login{min-height:100%;display:grid;grid-template-columns:1fr 1fr}
+.lv{padding:3rem;display:flex;flex-direction:column;justify-content:space-between;background:radial-gradient(900px 500px at 0 0,var(--acs),transparent 60%),var(--bg)}
+.lv h1{font-size:clamp(2rem,4vw,3.2rem);line-height:1.05;letter-spacing:-.035em;font-weight:800;max-width:14ch}
+.lv p{color:var(--mute);max-width:38ch;margin-top:1rem;font-size:16px}
+.mock{margin-top:2rem;max-width:360px;padding:1rem;display:grid;gap:.7rem}
+.mock div{display:flex;justify-content:space-between;align-items:center}
+.lf{display:grid;place-items:center;padding:2rem;background:var(--sf);border-left:1px solid var(--line)}
+.lf form{width:min(360px,100%)}.lf h2{margin-bottom:.3rem}.lf .btn{width:100%;padding:.75rem}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
+.logo i{width:30px;height:30px;border-radius:9px;background:var(--ac);display:grid;place-items:center}.logo svg{width:18px;height:18px}
+
+#app{display:grid;grid-template-columns:248px 1fr;min-height:100%}
+aside{background:var(--sf);border-right:1px solid var(--line);padding:1.1rem .8rem;display:flex;flex-direction:column;gap:1.4rem;position:sticky;top:0;height:100vh}
+aside .logo{padding:0 .5rem}
+.grp{font-size:12px;font-weight:600;color:var(--mute);padding:0 .7rem;margin-bottom:.3rem}
+nav{display:flex;flex-direction:column;gap:.15rem;margin-bottom:1rem}
+nav button{background:none;border:0;text-align:left;padding:.55rem .7rem;border-radius:9px;color:var(--mute);cursor:pointer;display:flex;gap:.65rem;align-items:center;font-weight:500}
+nav button:hover{background:var(--sf2);color:var(--ink)}nav button[aria-current=page]{background:var(--acs);color:var(--ac2);font-weight:600}
+[data-theme=dark] nav button[aria-current=page]{color:var(--ac)}
+nav svg{width:18px;height:18px;flex:none}
+.me{margin-top:auto;display:flex;gap:.6rem;align-items:center;padding:.6rem;border:1px solid var(--line);border-radius:12px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-weight:700}
+.me small{display:block;color:var(--mute)}.me button{margin-left:auto;background:none;border:0;color:var(--mute);cursor:pointer;padding:.3rem}
+.wrap{min-width:0;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:.7rem;padding:.8rem clamp(1rem,3vw,2rem);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(8px);position:sticky;top:0;z-index:5}
+.bar .sp{flex:1}.bar select{width:auto}.ib{background:var(--sf);border:1px solid var(--line);border-radius:10px;width:36px;height:36px;display:grid;place-items:center;cursor:pointer}
+#menu{display:none}
+main{padding:1.6rem clamp(1rem,3vw,2rem) 3rem;max-width:1200px;width:100%}
+.head{margin-bottom:1.3rem}.head p{color:var(--mute);margin-top:.2rem}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1rem}
+.kpi{padding:1.1rem}.kpi small{color:var(--mute);font-weight:500}.kpi b{display:block;font-size:1.6rem;letter-spacing:-.03em;font-weight:800;margin:.3rem 0}
+.chip{font-size:12px;font-weight:600;padding:.12rem .5rem;border-radius:99px;background:var(--okb);color:var(--ok)}.chip.dn{background:var(--badb);color:var(--bad)}.chip.fl{background:var(--sf2);color:var(--mute)}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1rem}
+.chart{position:relative}.chart svg{width:100%;height:auto;display:block}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);padding:.4rem .6rem;border-radius:8px;font-size:12px;transform:translate(-50%,-115%);white-space:nowrap;z-index:2}
+.donut{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap}.donut svg{width:130px;height:130px}
+.leg{display:grid;gap:.5rem;font-size:13px}.leg span{display:flex;align-items:center;gap:.5rem}.leg i{width:10px;height:10px;border-radius:3px}
+
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:620px}
+th{text-align:left;font-weight:600;font-size:12px;color:var(--mute);padding:.7rem 1rem;border-bottom:1px solid var(--line);background:var(--sf2);white-space:nowrap}
+td{padding:.8rem 1rem;border-bottom:1px solid var(--line)}tbody tr{cursor:pointer}tbody tr:hover{background:var(--sf2)}tr:last-child td{border:0}
+.r{text-align:right}
+.pill{display:inline-flex;align-items:center;gap:.35rem;padding:.15rem .6rem;border-radius:99px;font-size:12px;font-weight:600}
+.pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.pill.SUCCESS{background:var(--okb);color:var(--ok)}.pill.FAILED{background:var(--badb);color:var(--bad)}.pill.PENDING{background:var(--waitb);color:var(--wait)}
+.pill.PENDING:before{animation:bl 1.4s infinite}@keyframes bl{50%{opacity:.2}}
+.empty{text-align:center;color:var(--mute);padding:2.5rem 1rem;cursor:default}
+.tools{display:flex;gap:.6rem;padding:1rem;flex-wrap:wrap;border-bottom:1px solid var(--line)}.tools input{flex:1;min-width:200px}.tools select{width:auto}
+.pager{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;color:var(--mute)}.pager div{display:flex;gap:.5rem}
+
+.collect{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:1.5rem;align-items:start}
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem}.chips button{border:1px solid var(--line);background:var(--sf);border-radius:99px;padding:.2rem .8rem;cursor:pointer;font-weight:500}.chips button:hover{border-color:var(--ac)}
+.phone{width:272px;height:520px;background:#0b1220;border-radius:40px;padding:11px;margin:auto;box-shadow:0 30px 50px -25px rgba(5,150,105,.45)}
+.scr{height:100%;border-radius:30px;background:linear-gradient(170deg,#1c3b52,#0e1b2b);position:relative;overflow:hidden;color:#fff;padding:1.3rem 1rem;text-align:center}
+.scr small{opacity:.7}.scr .clk{font-size:2.8rem;font-weight:700;letter-spacing:-.03em;margin-top:.4rem}
+.stk{position:absolute;left:10px;right:10px;bottom:12px;background:#fff;color:#0f172a;border-radius:20px;padding:1rem;text-align:left;opacity:.35;transform:translateY(10px);transition:.35s}.stk.on{opacity:1;transform:none}
+.stk h4{font-size:12px;color:#047857;letter-spacing:.02em}.stk .a{font-size:1.8rem;font-weight:800;letter-spacing:-.03em;margin:.2rem 0}.stk p{font-size:12.5px;color:#64748b}
+.stk .pin{display:flex;gap:.4rem;margin:.8rem 0}.stk .pin i{flex:1;height:32px;border-radius:8px;background:#eef2f6}
+.stk .fk{display:flex;gap:.5rem}.stk .fk span{flex:1;text-align:center;padding:.45rem;border-radius:9px;font-weight:600;font-size:13px;background:#eef2f6}.stk .fk span+span{background:#059669;color:#fff}
+.res{margin-top:1rem;padding:1rem;border-radius:12px;background:var(--sf2)}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:.6rem 1rem;word-break:break-all}.kv dt{color:var(--mute)}.kv dd{margin:0}
+
+#dim{position:fixed;inset:0;background:rgba(2,6,23,.45);z-index:20;opacity:0;pointer-events:none;transition:.2s}#dim.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--sf);border-left:1px solid var(--line);z-index:21;transform:translateX(100%);transition:transform .25s;padding:1.4rem;overflow:auto}#drawer.on{transform:none}
+#drawer .big{font-size:2rem;font-weight:800;letter-spacing:-.03em;margin:.8rem 0 1.2rem}
+#toasts{position:fixed;right:1rem;bottom:1rem;display:grid;gap:.5rem;z-index:30}
+.toast{background:var(--ink);color:var(--bg);padding:.7rem 1rem;border-radius:10px;box-shadow:var(--sh);animation:in .25s}.toast.bad{background:var(--bad);color:#fff}@keyframes in{from{transform:translateY(8px);opacity:0}}
+.skel{height:92px;background:linear-gradient(90deg,var(--sf2),var(--line),var(--sf2));background-size:200% 100%;animation:sk 1.2s infinite;border-radius:16px}@keyframes sk{to{background-position:-200% 0}}
+@media(max-width:960px){.kpis{grid-template-columns:repeat(2,1fr)}.two,.collect{grid-template-columns:1fr}}
+@media(max-width:780px){#login{grid-template-columns:1fr}.lv{padding:1.5rem}.lv .mock{display:none}.lf{border:0}
+#app{grid-template-columns:1fr}aside{position:fixed;z-index:25;width:260px;transform:translateX(-100%);transition:transform .25s}aside.on{transform:none}#menu{display:grid}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<section id="login">
+  <div class="lv">
+    <div class="logo"><i><svg viewBox="0 0 100 100"><path d="M30 70V30h22a13 13 0 0 1 0 26H42" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></svg></i>PalPluss Collect</div>
+    <div><h1>Get paid by M-Pesa, in seconds.</h1><p>Send a payment request to any Safaricom number and track it from prompt to receipt.</p>
+      <div class="card mock pad"><div><b>KES 2,500</b><span class="pill SUCCESS">Paid</span></div><div class="sub"><span>0712 ••• 678</span><span>ORD7F3A21</span></div><div><b>KES 800</b><span class="pill PENDING">Waiting</span></div></div></div>
+    <small class="sub">Secure admin access</small>
+  </div>
+  <div class="lf"><form id="lf"><h2>Welcome back</h2><p class="sub" style="margin-bottom:1.5rem">Sign in to your workspace.</p>
+    <div class="field"><label for="u">Username</label><input id="u" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required></div>
+    <button class="btn" id="lb">Sign in</button><div class="err" id="le" role="alert"></div></form></div>
+</section>
+
+<div id="app" hidden>
+  <aside id="side">
+    <div class="logo"><i><svg viewBox="0 0 100 100"><path d="M30 70V30h22a13 13 0 0 1 0 26H42" stroke="#fff" stroke-width="10" fill="none" stroke-linecap="round"/></svg></i>PalPluss</div>
+    <div><div class="grp">Workspace</div><nav id="nav">
+      <button data-v="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>Overview</button>
+      <button data-v="collect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>Collect payment</button>
+      <button data-v="tx"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Transactions</button>
+      <button data-v="customers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6M17 11a3 3 0 1 0 0-6M22 19c0-3-2-5-5-5.5"/></svg>Customers</button></nav>
+      <div class="grp">Account</div><nav><button data-v="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Settings</button></nav></div>
+    <div class="me"><div class="av" id="av">A</div><div><b id="un">admin</b><small>Administrator</small></div><button id="out" title="Sign out" aria-label="Sign out"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg></button></div>
+  </aside>
+  <div class="wrap">
+    <header class="bar"><button class="ib" id="menu" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><b id="crumb"></b><span class="sp"></span>
+      <select id="range" aria-label="Date range"><option value="7">Last 7 days</option><option value="30" selected>Last 30 days</option><option value="90">Last 90 days</option></select>
+      <button class="ib" id="theme" aria-label="Toggle theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg></button>
+      <button class="btn sm" id="newp">New request</button></header>
+    <main id="main"></main>
+  </div>
+</div>
+<div id="dim"></div><aside id="drawer" aria-label="Payment details"></aside><div id="toasts" aria-live="polite"></div>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),API=((window.APP_CONFIG||{}).API_BASE||"").replace(/\/$/,"");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const kes=n=>"KES "+Number(n||0).toLocaleString("en-KE",{maximumFractionDigits:2});
+const when=i=>new Date(i).toLocaleString("en-KE",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+const label={SUCCESS:"Paid",PENDING:"Waiting",FAILED:"Failed"},pill=s=>`<span class="pill ${s}">${label[s]||s}</span>`;
+let token=localStorage.getItem("pc_token"),view="overview",timer,range=30,tx={page:1,q:"",status:"",items:[]};
+
+function toast(m,bad){const t=document.createElement("div");t.className="toast"+(bad?" bad":"");t.textContent=m;$("#toasts").append(t);setTimeout(()=>t.remove(),4200)}
+async function api(p,o={}){let r;
+  try{r=await fetch(API+"/api"+p,{...o,headers:{"Content-Type":"application/json",...(token?{Authorization:"Bearer "+token}:{})},body:o.body?JSON.stringify(o.body):undefined})}
+  catch{throw new Error("Can't reach the server. If it was idle, wait 30 seconds while it wakes up, then try again.")}
+  const d=await r.json().catch(()=>({}));
+  if(r.status===401&&token){out();throw new Error(d.detail||"Signed out")}
+  if(!r.ok)throw new Error(typeof d.detail==="string"?d.detail:"Request failed ("+r.status+")");return d}
+
+$("#lf").onsubmit=async e=>{e.preventDefault();const b=$("#lb");b.disabled=true;$("#le").textContent="";
+  const slow=setTimeout(()=>b.textContent="Waking the server…",4000);b.textContent="Signing in…";
+  try{const d=await api("/auth/login",{method:"POST",body:{username:$("#u").value,password:$("#p").value}});
+    token=d.token;localStorage.setItem("pc_token",token);localStorage.setItem("pc_user",d.username);boot()}
+  catch(x){$("#le").textContent=x.message}finally{clearTimeout(slow);b.disabled=false;b.textContent="Sign in"}};
+function out(){token=null;localStorage.removeItem("pc_token");clearInterval(timer);$("#app").hidden=true;$("#login").hidden=false}
+$("#out").onclick=out;
+$("#theme").onclick=()=>{const t=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=t;localStorage.setItem("pc_theme",t)};
+$("#menu").onclick=()=>$("#side").classList.toggle("on");
+$("#newp").onclick=()=>go("collect");
+$("#range").onchange=e=>{range=+e.target.value;if(view==="overview")views.overview()};
+function boot(){$("#login").hidden=true;$("#app").hidden=false;const u=localStorage.getItem("pc_user")||"admin";$("#un").textContent=u;$("#av").textContent=u[0].toUpperCase();go(location.hash.slice(1)||"overview")}
+
+const names={overview:"Overview",collect:"Collect payment",tx:"Transactions",customers:"Customers",settings:"Settings"};
+function go(v){if(!views[v])v="overview";view=v;location.hash=v;clearInterval(timer);closeDrawer();$("#side").classList.remove("on");
+  document.querySelectorAll("aside nav button").forEach(b=>b.dataset.v===v?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  $("#crumb").textContent=names[v];$("#range").hidden=v!=="overview";views[v]()}
+document.querySelectorAll("aside nav").forEach(n=>n.onclick=e=>{const b=e.target.closest("button");if(b)go(b.dataset.v)});
+const head=(t,p)=>`<div class="head"><h2>${t}</h2><p>${p}</p></div>`;
+const trs=items=>items.length?items.map((t,i)=>`<tr data-i="${i}"><td>${when(t.created_at)}</td><td class="mono">${esc(t.phone)}</td><td>${esc(t.reference)}</td><td class="r"><b>${kes(t.amount)}</b></td><td>${pill(t.status)}</td></tr>`).join(""):`<tr><td colspan="5" class="empty">No payments here yet. Send your first request from Collect payment.</td></tr>`;
+const thead=`<thead><tr><th>Time</th><th>Phone</th><th>Reference</th><th class="r">Amount</th><th>Status</th></tr></thead>`;
+function bindRows(sel,items){$(sel).onclick=e=>{const r=e.target.closest("tr[data-i]");if(r)openDrawer(items[+r.dataset.i])}}
+
+/* drawer */
+function openDrawer(t){$("#drawer").innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h3>Payment details</h3><button class="ib" id="dx" aria-label="Close">✕</button></div>${pill(t.status)}<div class="big">${kes(t.amount)}</div>
+ <dl class="kv"><dt>Phone</dt><dd class="mono">${esc(t.phone)}</dd><dt>Reference</dt><dd>${esc(t.reference)}</dd><dt>For</dt><dd>${esc(t.description)}</dd><dt>Transaction ID</dt><dd class="mono">${esc(t.tx_id||"-")}</dd><dt>Checkout ID</dt><dd class="mono">${esc(t.checkout_id||"-")}</dd><dt>Created</dt><dd>${when(t.created_at)}</dd><dt>Last update</dt><dd>${when(t.updated_at)}</dd><dt>Provider message</dt><dd>${esc(t.result||"-")}</dd></dl>`;
+ $("#drawer").classList.add("on");$("#dim").classList.add("on");$("#dx").onclick=closeDrawer;$("#dx").focus()}
+function closeDrawer(){$("#drawer").classList.remove("on");$("#dim").classList.remove("on")}
+$("#dim").onclick=closeDrawer;document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDrawer();if(e.key==="/"&&$("#q")&&!/INPUT|SELECT/.test(document.activeElement.tagName)){e.preventDefault();$("#q").focus()}});
+
+/* charts */
+function area(series){const W=720,H=230,p={l:10,r:10,t:14,b:26},n=series.length,max=Math.max(...series.map(s=>s.amount),1)*1.15;
+  const x=i=>p.l+i*(W-p.l-p.r)/Math.max(n-1,1),y=v=>p.t+(H-p.t-p.b)*(1-v/max);
+  const line=series.map((s,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(s.amount).toFixed(1)).join("");
+  const step=Math.ceil(n/7),grid=[0,.5,1].map(f=>`<line x1="${p.l}" x2="${W-p.r}" y1="${y(max*f/1.15).toFixed(1)}" y2="${y(max*f/1.15).toFixed(1)}" stroke="var(--line)"/>`).join("");
+  const lb=series.map((s,i)=>i%step===0||i===n-1?`<text x="${x(i)}" y="${H-6}" font-size="11" fill="var(--mute)" text-anchor="${i===0?"start":i===n-1?"end":"middle"}">${new Date(s.day).toLocaleDateString("en-KE",{day:"numeric",month:"short"})}</text>`:"").join("");
+  return `<div class="chart" id="ch"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Revenue over time"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--ac)" stop-opacity=".28"/><stop offset="1" stop-color="var(--ac)" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${line}L${x(n-1)} ${H-p.b}L${x(0)} ${H-p.b}Z" fill="url(#g)"/><path d="${line}" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linejoin="round"/>${lb}<line id="gl" y1="${p.t}" y2="${H-p.b}" stroke="var(--mute)" stroke-dasharray="3 3" opacity="0"/><circle id="gd" r="5" fill="var(--ac)" stroke="var(--sf)" stroke-width="2" opacity="0"/></svg><div class="tip" id="tip" hidden></div></div>`}
+function hover(series){const c=$("#ch");if(!c)return;const svg=c.querySelector("svg"),W=720,H=230,max=Math.max(...series.map(s=>s.amount),1)*1.15,n=series.length;
+  c.onmousemove=e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W,i=Math.min(n-1,Math.max(0,Math.round((px-10)/((W-20)/Math.max(n-1,1)))));
+    const s=series[i],cx=10+i*(W-20)/Math.max(n-1,1),cy=14+(H-40)*(1-s.amount/max);
+    $("#gl").setAttribute("x1",cx);$("#gl").setAttribute("x2",cx);$("#gl").style.opacity=1;$("#gd").setAttribute("cx",cx);$("#gd").setAttribute("cy",cy);$("#gd").style.opacity=1;
+    const t=$("#tip");t.hidden=false;t.style.left=cx/W*r.width+"px";t.style.top=cy/H*r.height+"px";t.textContent=new Date(s.day).toLocaleDateString("en-KE",{day:"numeric",month:"short"})+" · "+kes(s.amount)+" · "+s.count+" requests"};
+  c.onmouseleave=()=>{$("#tip").hidden=true;$("#gl").style.opacity=0;$("#gd").style.opacity=0}}
+function donut(sp){const cols={SUCCESS:"var(--ac)",PENDING:"#f59e0b",FAILED:"#ef4444"},tot=Object.values(sp).reduce((a,b)=>a+b,0),R=52,C=2*Math.PI*R;let off=0;
+  const segs=tot?Object.entries(sp).filter(([,v])=>v).map(([k,v])=>{const l=v/tot*C,s=`<circle r="${R}" cx="65" cy="65" fill="none" stroke="${cols[k]}" stroke-width="16" stroke-dasharray="${l} ${C-l}" stroke-dashoffset="${-off}" transform="rotate(-90 65 65)"/>`;off+=l;return s}).join(""):"";
+  return `<div class="donut"><svg viewBox="0 0 130 130" role="img" aria-label="Payment outcomes"><circle r="${R}" cx="65" cy="65" fill="none" stroke="var(--sf2)" stroke-width="16"/>${segs}<text x="65" y="63" text-anchor="middle" font-size="22" font-weight="800" fill="var(--ink)">${tot}</text><text x="65" y="80" text-anchor="middle" font-size="11" fill="var(--mute)">requests</text></svg>
+  <div class="leg">${Object.keys(sp).map(k=>`<span><i style="background:${cols[k]}"></i>${label[k]} <b>${sp[k]}</b></span>`).join("")}</div></div>`}
+function delta(c,p){if(!p)return c?`<span class="chip">New</span>`:`<span class="chip fl">No change</span>`;const d=(c-p)/p*100;return `<span class="chip ${d<0?"dn":d===0?"fl":""}">${d>0?"+":""}${d.toFixed(0)}%</span>`}
+
+/* views */
+const views={
+async overview(){$("#main").innerHTML=head("Overview","How your collections are performing")+`<div class="kpis">${'<div class="skel"></div>'.repeat(4)}</div>`;
+  const load=async()=>{if(view!=="overview")return;
+    const [s,t]=await Promise.all([api("/stats?days="+range),api("/transactions?limit=6")]);tx.items=t.items;
+    $("#main").innerHTML=head("Overview","How your collections are performing")+
+    (s.configured?"":`<div class="card pad" style="margin-bottom:1rem;border-color:var(--ac)">Add your <b>PALPLUSS_API_KEY</b> in Render to start sending payment requests.</div>`)+
+    `<div class="kpis"><div class="card kpi"><small>Collected</small><b>${kes(s.collected)}</b>${delta(s.collected,s.previous)} <small>vs previous ${s.days} days</small></div>
+     <div class="card kpi"><small>Collected today</small><b>${kes(s.collected_today)}</b><small>${s.pending} waiting on customers</small></div>
+     <div class="card kpi"><small>Success rate</small><b>${s.success_rate}%</b><small>${s.count} requests sent</small></div>
+     <div class="card kpi"><small>Average payment</small><b>${kes(s.avg_ticket)}</b><small>per paid request</small></div></div>
+     <div class="two"><div class="card pad"><h3 style="margin-bottom:.8rem">Revenue</h3>${area(s.series)}</div><div class="card pad"><h3 style="margin-bottom:1rem">Outcomes</h3>${donut(s.split)}</div></div>
+     <div class="card"><div class="pad" style="padding-bottom:.6rem;display:flex;justify-content:space-between"><h3>Recent payments</h3><button class="btn sec sm" onclick="go('tx')">View all</button></div><div class="tw"><table>${thead}<tbody id="rb">${trs(t.items)}</tbody></table></div></div>`;
+    hover(s.series);bindRows("#rb",tx.items)};
+  try{await load()}catch(e){toast(e.message,1)}timer=setInterval(()=>load().catch(()=>{}),10000)},
+
+collect(){$("#main").innerHTML=head("Collect payment","Your customer gets an M-Pesa prompt on their phone")+`<div class="collect"><div class="card pad"><form id="sf">
+  <div class="field"><label for="ph">Customer phone</label><input id="ph" inputmode="tel" placeholder="0712 345 678" required></div>
+  <div class="field"><label for="am">Amount (KES)</label><input id="am" type="number" min="1" step="1" placeholder="500" required><div class="chips">${[100,500,1000,2500,5000].map(n=>`<button type="button" data-a="${n}">${n.toLocaleString()}</button>`).join("")}</div></div>
+  <div class="field"><label for="ds">What is it for?</label><input id="ds" value="Payment" maxlength="60"></div>
+  <button class="btn" id="sb">Send payment request</button><div class="err" id="se" role="alert"></div><div id="sr"></div></form></div>
+  <div class="phone"><div class="scr"><small>What your customer sees</small><div class="clk" id="clk"></div>
+  <div class="stk" id="stk"><h4>M-PESA</h4><p>Pay to <b id="pd"></b></p><div class="a" id="pa"></div><p id="pp"></p><div class="pin"><i></i><i></i><i></i><i></i></div><div class="fk"><span>Cancel</span><span>Send</span></div></div></div></div></div>`;
+  const up=()=>{$("#pa").textContent=kes($("#am").value);$("#pd").textContent=$("#ds").value||"Payment";$("#pp").textContent=$("#ph").value?"To "+$("#ph").value:"Enter a phone number";$("#stk").classList.toggle("on",!!($("#am").value&&$("#ph").value))};
+  ["ph","am","ds"].forEach(i=>$("#"+i).oninput=up);document.querySelectorAll(".chips button").forEach(b=>b.onclick=()=>{$("#am").value=b.dataset.a;up()});
+  $("#clk").textContent=new Date().toLocaleTimeString("en-KE",{hour:"2-digit",minute:"2-digit"});up();
+  $("#sf").onsubmit=async e=>{e.preventDefault();$("#sb").disabled=true;$("#se").textContent="";$("#sr").innerHTML="";
+    try{const t=await api("/stk",{method:"POST",body:{phone:$("#ph").value,amount:parseFloat($("#am").value),description:$("#ds").value}});toast("Request sent to "+t.phone);
+      $("#sr").innerHTML=`<div class="res"><b>Sent. Waiting for the customer to enter their PIN.</b><dl class="kv" style="margin-top:.8rem"><dt>Reference</dt><dd>${esc(t.reference)}</dd><dt>Transaction ID</dt><dd class="mono">${esc(t.tx_id||"-")}</dd><dt>Status</dt><dd id="live">${pill(t.status)}</dd></dl></div>`;poll(t.reference)}
+    catch(x){$("#se").textContent=x.message}finally{$("#sb").disabled=false}}},
+
+async tx(){$("#main").innerHTML=head("Transactions","Select a row for full details")+`<div class="card"><div class="tools"><input id="q" placeholder="Search phone, reference or ID  ( / )" value="${esc(tx.q)}"><select id="st"><option value="">All statuses</option><option value="SUCCESS">Paid</option><option value="PENDING">Waiting</option><option value="FAILED">Failed</option></select><button class="btn sec" id="csv">Export CSV</button></div>
+  <div class="tw"><table>${thead}<tbody id="tb"></tbody></table></div><div class="pager"><span id="pi"></span><div><button class="btn sec sm" id="pv">Previous</button><button class="btn sec sm" id="nx">Next</button></div></div></div>`;
+  $("#st").value=tx.status;
+  const load=async()=>{try{const d=await api(`/transactions?page=${tx.page}&limit=15&q=${encodeURIComponent(tx.q)}&status=${tx.status}`);tx.items=d.items;$("#tb").innerHTML=trs(d.items);
+    const pg=Math.max(Math.ceil(d.total/15),1);$("#pi").textContent=`${d.total} payments · page ${tx.page} of ${pg}`;$("#pv").disabled=tx.page<=1;$("#nx").disabled=tx.page>=pg}catch(e){toast(e.message,1)}};
+  let dt;$("#q").oninput=e=>{clearTimeout(dt);dt=setTimeout(()=>{tx.q=e.target.value;tx.page=1;load()},300)};$("#st").onchange=e=>{tx.status=e.target.value;tx.page=1;load()};
+  $("#pv").onclick=()=>{tx.page--;load()};$("#nx").onclick=()=>{tx.page++;load()};$("#tb").onclick=e=>{const r=e.target.closest("tr[data-i]");if(r)openDrawer(tx.items[+r.dataset.i])};
+  $("#csv").onclick=async()=>{const r=await api(`/transactions?limit=200&q=${encodeURIComponent(tx.q)}&status=${tx.status}`);
+    const l=[["time","phone","reference","amount","status","tx_id"],...r.items.map(t=>[t.created_at,t.phone,t.reference,t.amount,t.status,t.tx_id||""])].map(a=>a.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(","));
+    const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([l.join("\n")],{type:"text/csv"}));a.download="transactions.csv";a.click()};
+  await load();timer=setInterval(load,10000)},
+
+async customers(){$("#main").innerHTML=head("Customers","Everyone you've requested payment from, ranked by amount paid")+`<div class="card"><div class="tools"><input id="q" placeholder="Search phone number"></div><div class="tw"><table><thead><tr><th>Phone</th><th class="r">Requests</th><th class="r">Total paid</th><th>Last request</th></tr></thead><tbody id="cb"></tbody></table></div></div>`;
+  const load=async q=>{try{const d=await api("/customers?q="+encodeURIComponent(q||""));$("#cb").innerHTML=d.items.length?d.items.map(c=>`<tr style="cursor:default"><td class="mono"><b>${esc(c.phone)}</b></td><td class="r">${c.requests}</td><td class="r"><b>${kes(c.paid)}</b></td><td>${when(c.last)}</td></tr>`).join(""):`<tr><td colspan="4" class="empty">No customers yet.</td></tr>`}catch(e){toast(e.message,1)}};
+  let dt;$("#q").oninput=e=>{clearTimeout(dt);dt=setTimeout(()=>load(e.target.value),300)};load()},
+
+async settings(){let s={};try{s=await api("/stats?days=7")}catch{}
+  $("#main").innerHTML=head("Settings","Your account and integration")+`<div style="display:grid;gap:1rem;max-width:560px"><div class="card pad"><h3 style="margin-bottom:1rem">Change password</h3><form id="pf"><div class="field"><label for="cp">Current password</label><input id="cp" type="password" autocomplete="current-password" required></div><div class="field"><label for="np">New password (8+ characters)</label><input id="np" type="password" minlength="8" autocomplete="new-password" required></div><button class="btn">Save password</button><div class="err" id="pe"></div></form></div>
+  <div class="card pad"><h3 style="margin-bottom:1rem">Integration</h3><dl class="kv"><dt>PalPluss API key</dt><dd>${s.configured?'<span class="pill SUCCESS">Connected</span>':'<span class="pill FAILED">Missing</span>'}</dd><dt>Callback URL</dt><dd class="mono">${esc(s.callback||"Not set")}</dd><dt>API server</dt><dd class="mono">${esc(API||"same origin")}</dd></dl></div></div>`;
+  $("#pf").onsubmit=async e=>{e.preventDefault();$("#pe").textContent="";try{await api("/auth/password",{method:"POST",body:{current:$("#cp").value,new:$("#np").value}});e.target.reset();toast("Password updated")}catch(x){$("#pe").textContent=x.message}}}
+};
+async function poll(ref){for(let i=0;i<24&&view==="collect";i++){await new Promise(r=>setTimeout(r,5000));
+  try{const d=await api("/transactions?q="+encodeURIComponent(ref)),t=d.items[0];if(!t)continue;const el=$("#live");if(el)el.innerHTML=pill(t.status)+(t.result?" "+esc(t.result):"");
+    if(t.status!=="PENDING"){toast(t.status==="SUCCESS"?"Payment received":"Payment did not go through",t.status==="FAILED");return}}catch{}}}
+if(token)boot();
+</script>
+</body>
+</html>

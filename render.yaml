@@ -1,0 +1,31 @@
+databases:
+  - name: collect-db
+    plan: free
+services:
+  - type: web
+    name: palpluss-collect-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips=*
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase: { name: collect-db, property: connectionString }
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CALLBACK_TOKEN
+        generateValue: true
+      - key: PALPLUSS_API_KEY
+        sync: false
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: CALLBACK_URL
+        sync: false
